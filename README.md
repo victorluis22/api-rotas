@@ -1,5 +1,5 @@
 
-# Backend Nanofab
+# Backend Rotas
 
 Código para o backend do projeto Rotas
 
@@ -32,7 +32,7 @@ Instale as dependências
 Inicie o servidor com Nodemon
 
 ```bash
-  yarn dev-start
+  yarn dev
 ```
 
 Ou inicie o servidor com Node
