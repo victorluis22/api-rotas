@@ -4,27 +4,39 @@ class tipoVeiculoController {
 	async create(req, res) {
 		const {
 			codTipoVeic,
-            descrTipo
+            descTipo
 		} = req.body;
-
 		db.query(
-			`INSERT INTO tipoVeiculo 
-			(codTipoVeic, DescrTipo) 
-			VALUES (?, ?)`,
-			[
-				codTipoVeic,
-                descrTipo
-			],
-			(err) => {
+			"SELECT * FROM tipoVeiculo WHERE DescTipo = ?",
+			[descTipo],
+			async (err, result) => {
 				if (err) {
 					return res.status(500).send(err);
+				} else if (result.length > 0) {
+					return res.status(402).send({ message: "Tipo já cadastrado!" });
 				} else {
-					return res
-						.status(200)
-						.send({ message: "Novo tipo de veículo cadastrado com sucesso!" });
+					db.query(
+						`INSERT INTO tipoVeiculo 
+						(CodTipoVeic, DescTipo) 
+						VALUES (?, ?)`,
+						[
+							codTipoVeic,
+							descTipo
+						],
+						(err) => {
+							if (err) {
+								return res.status(500).send(err);
+							} else {
+								return res
+									.status(200)
+									.send({ message: "Novo tipo de veículo cadastrado com sucesso!" });
+							}
+						}
+					);
 				}
 			}
 		);
+		
 	}
 
 	async read(req, res) {
@@ -40,16 +52,16 @@ class tipoVeiculoController {
 	async update(req, res) {
 		const {
 			codTipoVeic,
-            descrTipo
+            descTipo
 		} = req.body;
 
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE tipoVeiculo SET codTipoVeic=?, descrTipo=?WHERE codTipoVeic=?`,
+			`UPDATE tipoVeiculo SET CodTipoVeic=?, DescTipo=? WHERE CodTipoVeic=?`,
 			[
 				codTipoVeic,
-                descrTipo,
+                descTipo,
 				id
 			],
 			(err, result) => {
@@ -73,7 +85,7 @@ class tipoVeiculoController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM tipoVeiculo WHERE codTipoVeic=?;", [id], async (err, result) => {
+		db.query("DELETE FROM tipoVeiculo WHERE CodTipoVeic=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
