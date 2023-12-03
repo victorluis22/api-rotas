@@ -1,50 +1,34 @@
 import db from "../database/index.js";
-import fs from "fs"
 
 class responsavelController {
 	async create(req, res) {
 		const {
-			codResp,
-            Nome,
-            CodEmpresa
+            nome,
+            codEmpresa
 		} = req.body;
 
 		db.query(
-			"SELECT * FROM responsavel WHERE codResp = ?",
-			[codResp],
-			async (err, result) => {
+			`INSERT INTO responsavel 
+			(Nome, CodEmpresa) 
+			VALUES (?, ?)`,
+			[
+				nome,
+				codEmpresa
+			],
+			(err) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else if (result.length > 0) {
-					return res.status(402).send({ message: "Responsável já cadastrado!" });
 				} else {
-
-					db.query(
-						`INSERT INTO responsavel 
-                        (codResp, Nome, CodEmpresa) 
-                        VALUES (?, ?, ?)`,
-						[
-							codResp,
-                            Nome,
-                            CodEmpresa
-						],
-						(err) => {
-							if (err) {
-								return res.status(500).send(err);
-							} else {
-								return res
-									.status(200)
-									.send({ message: "Novo resposável cadastrado com sucesso!" });
-							}
-						}
-					);
+					return res
+						.status(200)
+						.send({ message: "Novo responsável cadastrado com sucesso!" });
 				}
 			}
 		);
 	}
 
 	async read(req, res) {
-		db.query("SELECT codResp, Nome, CodEmpresa FROM responsavel", (err, result) => {
+		db.query("SELECT CodResp, Nome, CodEmpresa FROM responsavel", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -55,19 +39,17 @@ class responsavelController {
 
 	async update(req, res) {
 		const {
-			codResp,
-            Nome,
-            CodEmpresa, 
+            nome,
+            codEmpresa, 
 		} = req.body;
 
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE responsavel SET codResp=?, Nome=?, CodEmpresa=? WHERE codResp=?`,
+			`UPDATE responsavel SET Nome=?, CodEmpresa=? WHERE CodResp=?`,
 			[
-				codResp,
-                Nome,
-                CodEmpresa, 
+                nome,
+                codEmpresa, 
 				id
 			],
 			(err, result) => {
@@ -91,7 +73,7 @@ class responsavelController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM responsável WHERE codResp=?;", [id], async (err, result) => {
+		db.query("DELETE FROM responsavel WHERE CodResp=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}

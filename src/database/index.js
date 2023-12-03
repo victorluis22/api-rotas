@@ -7,6 +7,4 @@ const db = mySQL.createPool({
     database: "rotas"
 })
 
-console.log(db ? `${db.config.connectionConfig.database} inicializado com sucesso`: `Falha ao inicializar banco`)
-
 export default db

@@ -6,7 +6,7 @@ import sessionsController from "./controllers/sessionsController.js";
 import clienteController from "./controllers/clienteController.js";
 import empresaController from "./controllers/empresaController.js";
 import veiculoController from "./controllers/veiculoController.js";
-import responsavelController from "./controllers/responsavel.js";
+import responsavelController from "./controllers/responsavelController.js";
 import tipoVeiculoController from "./controllers/tipoVeiculoController.js";
 import tipoContratoController from "./controllers/tipoContratoController.js";
 import janelaTempoController from "./controllers/janelaTempoController.js";
@@ -47,10 +47,10 @@ routes.put('/veiculos/:id', veiculoController.update);
 routes.delete("/veiculos/:id", veiculoController.delete);
 
 // Responsável
-routes.post("/responsavel", responsavelController.create)
-routes.get("/responsavel", responsavelController.read);
-routes.put("/responsavel/:id", responsavelController.update);
-routes.delete("/responsavel/:id", responsavelController.delete);
+routes.post("/responsaveis", responsavelController.create)
+routes.get("/responsaveis", responsavelController.read);
+routes.put("/responsaveis/:id", responsavelController.update);
+routes.delete("/responsaveis/:id", responsavelController.delete);
 
 // TipoVeiculo
 routes.post("/tipoVeiculo", tipoVeiculoController.create)
