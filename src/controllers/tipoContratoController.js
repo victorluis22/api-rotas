@@ -1,49 +1,34 @@
 import db from "../database/index.js";
 
-class codTipoContController {
+class tipoContratoController {
 	async create(req, res) {
 		const {
-			codTipoCont,
             periodicidade,
             valorMensal
 		} = req.body;
 
 		db.query(
-			"SELECT * FROM codTipoCont WHERE codTipoCont = ?",
-			[codTipoCont],
-			async (err, result) => {
+			`INSERT INTO tipocontrato 
+			(Periodicidade, ValorMensal) 
+			VALUES (?, ?)`,
+			[
+				periodicidade,
+				valorMensal
+			],
+			(err) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else if (result.length > 0) {
-					return res.status(402).send({ message: "Empresa com CNPJ já cadastrado!" });
 				} else {
-            
-					db.query(
-						`INSERT INTO codTipoCont 
-                        (CodTipoContrato, Periodicidade, ValorMensal) 
-                        VALUES (?, ?, ?)`,
-						[
-							codTipoCont,
-                            periodicidade,
-                            valorMensal
-						],
-						(err) => {
-							if (err) {
-								return res.status(500).send(err);
-							} else {
-								return res
-									.status(200)
-									.send({ message: "Novo contrato cadastrado com sucesso!" });
-							}
-						}
-					);
+					return res
+						.status(200)
+						.send({ message: "Novo contrato cadastrado com sucesso!" });
 				}
 			}
 		);
 	}
 
 	async read(req, res) {
-		db.query("SELECT * FROM codTipoCont", (err, result) => {
+		db.query("SELECT * FROM tipocontrato", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -54,18 +39,15 @@ class codTipoContController {
 
 	async update(req, res) {
 		const {
-			codTipoCont,
             periodicidade,
             valorMensal
 		} = req.body;
 
 		const { id } = req.params;
 
-
 		db.query(
-			`UPDATE codTipoCont SET codTipoCont=?, Periodicidade=?, ValorMensal=?`,
+			`UPDATE tipocontrato SET Periodicidade=?, ValorMensal=? WHERE CodTipoContrato=?`,
 			[
-				codTipoCont,
                 periodicidade,
                 valorMensal,
                 id
@@ -77,13 +59,13 @@ class codTipoContController {
 
 				if (result.affectedRows === 0) {
 					return res.status(404).send({
-						message: "Nenhuma contrato encontrado com esse id.",
+						message: "Nenhum tipo de contrato encontrado com esse id.",
 					});
 				}
 
 				return res
 					.status(200)
-					.send({ message: "Contrato atualizado com sucesso!" });
+					.send({ message: "Tipo de contrato atualizado com sucesso!" });
 			}
 		);
 	}
@@ -91,7 +73,7 @@ class codTipoContController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM codTipoCont WHERE codTipoCont=?;", [id], async (err, result) => {
+		db.query("DELETE FROM tipocontrato WHERE CodTipoContrato=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -99,14 +81,14 @@ class codTipoContController {
 			if (result.affectedRows === 0) {
 				return res
 					.status(404)
-					.send({ message: "Nenhum contrato encontrado com esse id." });
+					.send({ message: "Nenhum tipo de contrato encontrado com esse id." });
 			} else {
 				return res
 					.status(200)
-					.send({ message: "Contrato excluido com sucesso!" });
+					.send({ message: "Tipo de contrato excluido com sucesso!" });
 			}
 		});
 	}
 }
 
-export default new codTipoContController();
+export default new tipoContratoController();

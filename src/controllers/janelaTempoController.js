@@ -3,20 +3,18 @@ import db from "../database/index.js";
 class janelaTempoController {
 	async create(req, res) {
 		const {
-			codTurno,
-            HoraIni,
-            HoraFim
+            horaIni,
+            horaFim
 		} = req.body;
 
 		db.query(
-			`INSERT INTO codTurno,
-            HoraIni,
-            HoraFim) 
-			VALUES (?, ?, ?)`,
+			`INSERT INTO janelatempo
+            (HoraIni,
+            HoraFim)
+			VALUES (?, ?)`,
 			[
-				codTurno,
-                HoraIni,
-                HoraFim
+                horaIni,
+                horaFim
 			],
 			(err) => {
 				if (err) {
@@ -31,7 +29,7 @@ class janelaTempoController {
 	}
 
 	async read(req, res) {
-		db.query("SELECT * FROM janelaTempo", (err, result) => {
+		db.query("SELECT * FROM janelatempo", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -42,19 +40,17 @@ class janelaTempoController {
 
 	async update(req, res) {
 		const {
-			codTurno,
-            HoraIni,
-            HoraFim
+            horaIni,
+            horaFim
 		} = req.body;
 
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE janelaTempo SET codTurno=?, HoraIni=?WHERE HoraFim=?`,
+			`UPDATE janelatempo SET HoraIni=? HoraFim=? WHERE CodTurno=?`,
 			[
-				codTurno,
-                HoraIni,
-                HoraFim,
+                horaIni,
+                horaFim,
 				id
 			],
 			(err, result) => {
@@ -78,7 +74,7 @@ class janelaTempoController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM janelaTempo WHERE codTurno=?;", [id], async (err, result) => {
+		db.query("DELETE FROM janelatempo WHERE CodTurno=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}

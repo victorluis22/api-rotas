@@ -59,10 +59,10 @@ routes.put("/tipoVeiculo/:id", tipoVeiculoController.update);
 routes.delete("/tipoVeiculo/:id", tipoVeiculoController.delete);
 
 // TipoContrato
-routes.post("/codTipoCont", tipoContratoController.create)
-routes.get("/codTipoCont", tipoContratoController.read);
-routes.put("/codTipoCont/:id", tipoContratoController.update);
-routes.delete("/codTipoCont/:id", tipoContratoController.delete);
+routes.post("/tipoContrato", tipoContratoController.create)
+routes.get("/tipoContrato", tipoContratoController.read);
+routes.put("/tipoContrato/:id", tipoContratoController.update);
+routes.delete("/tipoContrato/:id", tipoContratoController.delete);
 
 //JanelaTempo
 routes.post("/janelaTempo", janelaTempoController.create)
