@@ -10,6 +10,8 @@ import responsavelController from "./controllers/responsavelController.js";
 import tipoVeiculoController from "./controllers/tipoVeiculoController.js";
 import tipoContratoController from "./controllers/tipoContratoController.js";
 import janelaTempoController from "./controllers/janelaTempoController.js";
+import horariosController from "./controllers/horariosController.js";
+import pontosCompostagemController from "./controllers/pontosCompostagemController.js";
 
 const routes = Router();
 
@@ -69,5 +71,18 @@ routes.post("/janelaTempo", janelaTempoController.create)
 routes.get("/janelaTempo", janelaTempoController.read);
 routes.put("/janelaTempo/:id", janelaTempoController.update);
 routes.delete("/janelaTempo/:id", janelaTempoController.delete);
+
+//Horarios
+routes.post("/horarios", horariosController.create)
+routes.get("/horarios", horariosController.read);
+routes.put("/horarios/:id", horariosController.update);
+routes.delete("/horarios/:id", horariosController.delete);
+
+//Pontos de Compostagem
+routes.post("/pontosCompostagem", pontosCompostagemController.create)
+routes.get("/pontosCompostagem", pontosCompostagemController.read);
+routes.put("/pontosCompostagem/:id", pontosCompostagemController.update);
+routes.delete("/pontosCompostagem/:id", pontosCompostagemController.delete);
+
 
 export default routes;
