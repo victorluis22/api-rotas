@@ -12,6 +12,7 @@ import tipoContratoController from "./controllers/tipoContratoController.js";
 import janelaTempoController from "./controllers/janelaTempoController.js";
 import horariosController from "./controllers/horariosController.js";
 import pontosCompostagemController from "./controllers/pontosCompostagemController.js";
+import contratoController from "./controllers/contratoController.js";
 
 const routes = Router();
 
@@ -84,5 +85,11 @@ routes.get("/pontosCompostagem", pontosCompostagemController.read);
 routes.put("/pontosCompostagem/:id", pontosCompostagemController.update);
 routes.delete("/pontosCompostagem/:id", pontosCompostagemController.delete);
 
+// Contrato
+routes.post("/contrato", contratoController.create)
+routes.get("/contrato", contratoController.read);
+routes.get("/contrato/:id", contratoController.readClientContract);
+routes.put("/contrato/:id", contratoController.update);
+routes.delete("/contrato/:id", contratoController.delete);
 
 export default routes;
