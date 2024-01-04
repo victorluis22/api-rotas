@@ -39,6 +39,35 @@ class horariosController {
 		});
 	}
 
+	async readAll(req, res) {
+		db.query(`
+			SELECT
+				DiaSemana,
+				CASE
+					WHEN DiaSemana = 'segunda' THEN 1
+					WHEN DiaSemana = 'terça' THEN 2
+					WHEN DiaSemana = 'quarta' THEN 3
+					WHEN DiaSemana = 'quinta' THEN 4
+					WHEN DiaSemana = 'sexta' THEN 5
+					WHEN DiaSemana = 'sábado' THEN 6
+					ELSE 7
+				END AS numero,
+				HoraFim,
+				HoraIni,
+				CodHorario
+			FROM
+				horario H
+			INNER JOIN janelatempo JT ON H.CodTurno = JT.CodTurno
+			ORDER BY 2
+		`, (err, result) => {
+			if (err) {
+				return res.status(500).send(err);
+			}
+
+			return res.send(result);
+		});
+	}
+
 	async update(req, res) {
 		const {
             diaSemana,

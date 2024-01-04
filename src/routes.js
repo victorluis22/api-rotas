@@ -13,6 +13,7 @@ import janelaTempoController from "./controllers/janelaTempoController.js";
 import horariosController from "./controllers/horariosController.js";
 import pontosCompostagemController from "./controllers/pontosCompostagemController.js";
 import contratoController from "./controllers/contratoController.js";
+import horarioClienteController from "./controllers/horarioClienteController.js";
 
 const routes = Router();
 
@@ -76,6 +77,7 @@ routes.delete("/janelaTempo/:id", janelaTempoController.delete);
 //Horarios
 routes.post("/horarios", horariosController.create)
 routes.get("/horarios", horariosController.read);
+routes.get("/horarios/all", horariosController.readAll);
 routes.put("/horarios/:id", horariosController.update);
 routes.delete("/horarios/:id", horariosController.delete);
 
@@ -91,5 +93,12 @@ routes.get("/contrato", contratoController.read);
 routes.get("/contrato/:id", contratoController.readClientContract);
 routes.put("/contrato/:id", contratoController.update);
 routes.delete("/contrato/:id", contratoController.delete);
+
+// Horário Contrato Cliente
+routes.post("/horarioContratoCliente", horarioClienteController.create)
+routes.get("/horarioContratoCliente", horarioClienteController.read);
+routes.get("/horarioContratoCliente/:id", horarioClienteController.readHorarioContrato);
+routes.put("/horarioContratoCliente/:id", horarioClienteController.update);
+routes.delete("/horarioContratoCliente/:id", horarioClienteController.delete);
 
 export default routes;

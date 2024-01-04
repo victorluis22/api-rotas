@@ -3,27 +3,17 @@ import db from "../database/index.js";
 class horarioClienteController {
 	async create(req, res) {
 		const {
-            dataIni,
-            dataFim,
-            volumeBalde,
-            codTipoCont,
-            codEmpresa,
-            codCliente,
-            codTipoVeic
+            codHorario,
+			codContrato
 		} = req.body;
 
 		db.query(
-			`INSERT INTO contrato 
-			(DataIni, DataFim, VolumeBalde, CodTipoCont, CodEmpresa, CodCliente, CodTipoVeic) 
-			VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO horariocoletacliente
+			(CodHorario, NumContrato) 
+			VALUES (?, ?)`,
 			[
-				dataIni,
-                dataFim,
-                volumeBalde,
-                codTipoCont,
-                codEmpresa,
-                codCliente,
-                codTipoVeic
+				codHorario,
+				codContrato
 			],
 			(err) => {
 				if (err) {
@@ -31,14 +21,14 @@ class horarioClienteController {
 				} else {
 					return res
 						.status(200)
-						.send({ message: "Novo contrato cadastrado com sucesso!" });
+						.send({ message: "Novo horário de cliente cadastrado com sucesso!" });
 				}
 			}
 		);
 	}
 
 	async read(req, res) {
-		db.query("SELECT * FROM contrato", (err, result) => {
+		db.query("SELECT * FROM horariocoletacliente", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -47,9 +37,14 @@ class horarioClienteController {
 		});
 	}
 
-    async readContratoCliente (req, res){
+    async readHorarioContrato (req, res){
         const { id } = req.params;
-        db.query("SELECT * FROM contrato WHERE CodCliente=?", [id] ,(err, result) => {
+        db.query(`
+			SELECT CodHC, HCC.CodHorario, DiaSemana, HoraIni, HoraFim, NumContrato FROM horariocoletacliente HCC
+			INNER JOIN horario H ON H.CodHorario = HCC.CodHorario
+			INNER JOIN janelatempo JT ON JT.CodTurno = H.CodTurno
+			WHERE NumContrato=?
+		`, [id] ,(err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -60,27 +55,17 @@ class horarioClienteController {
 
 	async update(req, res) {
 		const {
-            dataIni,
-            dataFim,
-            volumeBalde,
-            codTipoCont,
-            codEmpresa,
-            codCliente,
-            codTipoVeic
+            codHorario,
+			codContrato
 		} = req.body;
 
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE contrato SET DataIni=?, DataFim=?, VolumeBalde=?, CodTipoCont=? CodEmpresa=?, CodCliente=?, CodTipoVeic=? WHERE NumContrato=?`,
+			`UPDATE horariocoletacliente SET CodHorario=?, NumContrato=? WHERE CodHC=?`,
 			[
-                dataIni,
-                dataFim,
-                volumeBalde,
-                codTipoCont,
-                codEmpresa,
-                codCliente,
-                codTipoVeic,
+                codHorario,
+				codContrato,
 				id
 			],
 			(err, result) => {
@@ -90,13 +75,13 @@ class horarioClienteController {
 
 				if (result.affectedRows === 0) {
 					return res.status(404).send({
-						message: "Nenhum contrato encontrado com esse id.",
+						message: "Nenhum horário de cliente encontrado com esse id.",
 					});
 				}
 
 				return res
 					.status(200)
-					.send({ message: "Contrato atualizado com sucesso!" });
+					.send({ message: "Horário de cliente atualizado com sucesso!" });
 			}
 		);
 	}
@@ -104,19 +89,20 @@ class horarioClienteController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM contrato WHERE NumContrato=?;", [id], async (err, result) => {
+		db.query("DELETE FROM horariocoletacliente WHERE CodHC=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
 
 			if (result.affectedRows === 0) {
+				console.log(result)
 				return res
 					.status(404)
-					.send({ message: "Nenhum contrato encontrado com esse id." });
+					.send({ message: "Nenhum horário de cliente encontrado com esse id." });
 			} else {
 				return res
 					.status(200)
-					.send({ message: "Contrato excluido com sucesso!" });
+					.send({ message: "Horário de cliente excluido com sucesso!" });
 			}
 		});
 	}
