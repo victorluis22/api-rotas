@@ -3,7 +3,6 @@ import db from "../database/index.js";
 class pontosCompostagemController {
 	async create(req, res) {
 		const {
-            codPonto,
             descricao,
             logradouro,
             numero,
@@ -17,8 +16,8 @@ class pontosCompostagemController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO pontosCompostagem
-            (   codPonto,
+			`INSERT INTO pontoCompostagem
+            (
                 descricao,
                 logradouro,
                 numero,
@@ -29,9 +28,8 @@ class pontosCompostagemController {
                 uf,
                 capacMaxDia,
                 codEmpresa)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			[
-                codPonto,
                 descricao,
                 logradouro,
                 numero,
@@ -56,7 +54,7 @@ class pontosCompostagemController {
 	}
 
 	async read(req, res) {
-		db.query("SELECT * FROM pontosCompostagem", (err, result) => {
+		db.query("SELECT * FROM pontoCompostagem", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -67,7 +65,6 @@ class pontosCompostagemController {
 
 	async update(req, res) {
 		const {
-            codPonto,
             descricao,
             logradouro,
             numero,
@@ -83,8 +80,8 @@ class pontosCompostagemController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE pontosCompostagem SET codPonto=?, descricao=?, logradouro=?, numero=?, complemento=?, utm=?, bairro=?, cidade=?, uf=?, capacMaxDia=?, codEmpresa=?  WHERE codPonto=?`,
-			[   codPonto,
+			`UPDATE pontoCompostagem SET descricao=?, logradouro=?, numero=?, complemento=?, utm=?, bairro=?, cidade=?, uf=?, capacMaxDia=?, codEmpresa=?  WHERE codPonto=?`,
+			[  
                 descricao,
                 logradouro,
                 numero,
@@ -118,7 +115,7 @@ class pontosCompostagemController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM pontosCompostagem WHERE codPonto=?;", [id], async (err, result) => {
+		db.query("DELETE FROM pontoCompostagem WHERE CodPonto=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
