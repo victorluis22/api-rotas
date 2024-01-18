@@ -15,6 +15,7 @@ import pontosCompostagemController from "./controllers/pontosCompostagemControll
 import contratoController from "./controllers/contratoController.js";
 import horarioClienteController from "./controllers/horarioClienteController.js";
 import horarioPontoController from "./controllers/horarioPontoController.js";
+import horarioVeiculoController from "./controllers/horarioVeiculoController.js";
 
 const routes = Router();
 
@@ -108,5 +109,12 @@ routes.get("/horarioPonto", horarioPontoController.read);
 routes.get("/horarioPonto/:id", horarioPontoController.readHorarioPonto);
 routes.put("/horarioPonto/:id", horarioPontoController.update);
 routes.delete("/horarioPonto/:id", horarioPontoController.delete);
+
+// Horário Veiculo
+routes.post("/horarioVeiculo", horarioVeiculoController.create)
+routes.get("/horarioVeiculo", horarioVeiculoController.read);
+routes.get("/horarioVeiculo/:id", horarioVeiculoController.readHorarioVeiculo);
+routes.put("/horarioVeiculo/:id", horarioVeiculoController.update);
+routes.delete("/horarioVeiculo/:id", horarioVeiculoController.delete);
 
 export default routes;
