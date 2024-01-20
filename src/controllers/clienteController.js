@@ -9,7 +9,7 @@ class clienteController {
 			logradouro,
 			numero,
 			complemento,
-			utm,
+			cep,
 			bairro,
 			cidade,
 			uf,
@@ -32,14 +32,14 @@ class clienteController {
 
 					db.query(
 						`INSERT INTO cliente 
-                        (Nome, Logradouro, Numero, Complemento, UTM, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF, QRCode) 
+                        (Nome, Logradouro, Numero, Complemento, CEP, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF, QRCode) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 						[
 							nome,
 							logradouro,
 							numero,
 							complemento,
-							utm,
+							cep,
 							bairro,
 							cidade,
 							uf,
@@ -64,7 +64,7 @@ class clienteController {
 	}
 
 	async read(req, res) {
-		db.query("SELECT CodCliente, Nome, Logradouro, Numero, Complemento, UTM, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF FROM cliente", (err, result) => {
+		db.query("SELECT CodCliente, Nome, Logradouro, Numero, Complemento, CEP, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF FROM cliente", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -79,7 +79,7 @@ class clienteController {
 			logradouro,
 			numero,
 			complemento,
-			utm,
+			cep,
 			bairro,
 			cidade,
 			uf,
@@ -94,13 +94,13 @@ class clienteController {
 		const pdfData = fs.readFileSync('./src/assets/pdf/client.pdf', {encoding: 'base64'});
 
 		db.query(
-			`UPDATE cliente SET Nome=?, Logradouro=?, Numero=?, Complemento=?, UTM=?, Bairro=?, Cidade=?, UF=?, TempoColeta=?, CPF_CNPJ=?, PJ_PF=?, QRCode=? WHERE CodCliente=?`,
+			`UPDATE cliente SET Nome=?, Logradouro=?, Numero=?, Complemento=?, CEP=?, Bairro=?, Cidade=?, UF=?, TempoColeta=?, CPF_CNPJ=?, PJ_PF=?, QRCode=? WHERE CodCliente=?`,
 			[
 				nome,
 				logradouro,
 				numero,
 				complemento,
-				utm,
+				cep,
 				bairro,
 				cidade,
 				uf,
