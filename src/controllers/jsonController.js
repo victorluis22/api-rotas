@@ -4,6 +4,9 @@ import { createJSON } from "../services/json.js";
 
 class jsonController {
 	async createClientJSON(req, res) {
+
+    const isDownload = req.query.download
+
 		db.query(
 			`   
         SELECT
@@ -37,6 +40,14 @@ class jsonController {
           
           const json = createJSON(result, "cliente")
 
+          if (isDownload){
+            var filename = 'customers_data.json';
+            var mimetype = 'application/json';
+            res.setHeader('Content-Type', mimetype);
+            res.setHeader('Content-disposition','attachment; filename='+filename);
+            return res.status(200).send(JSON.stringify(json))
+          }
+
           return res.status(200).send(json);
         }
       }
@@ -44,6 +55,8 @@ class jsonController {
   }
 
   async createVeicJSON(req, res) {
+    const isDownload = req.query.download
+
     db.query(`
       SELECT
       V.CodVeic as id,
@@ -70,6 +83,14 @@ class jsonController {
         
         const json = createJSON(result, "veiculo")
 
+        if (isDownload){
+          var filename = 'vehicles_data.json';
+          var mimetype = 'application/json';
+          res.setHeader('Content-Type', mimetype);
+          res.setHeader('Content-disposition','attachment; filename='+filename);
+          return res.status(200).send(JSON.stringify(json))
+        }
+
         return res.status(200).send(json);
       }
     }
@@ -77,6 +98,8 @@ class jsonController {
   }
 
   async createPointJSON(req, res){
+    const isDownload = req.query.download
+    
     db.query(`
       SELECT
       PC.CodPonto as id,
@@ -102,7 +125,15 @@ class jsonController {
         
         const json = createJSON(result, "pontoCompostagem")
 
-          return res.status(200).send(json);
+        if (isDownload){
+          var filename = 'depots_data.json';
+          var mimetype = 'application/json';
+          res.setHeader('Content-Type', mimetype);
+          res.setHeader('Content-disposition','attachment; filename='+filename);
+          return res.status(200).send(JSON.stringify(json))
+        }
+
+        return res.status(200).send(json);
       }
     });
   }

@@ -21,12 +21,13 @@ import jsonController from "./controllers/jsonController.js";
 
 const routes = Router();
 
-const test = async (req, res) => {
-    return res.status(200).json({message: "Ola mundo"})
+const start = async (req, res) => {
+    var now = new Date();
+    return res.status(200).json({msg: `API ROTAS v1.0.0 - ${now}`})
 }
 
 //Rotas livres
-routes.get("/", test)
+routes.get("/", start)
 routes.post("/login", sessionsController.create);
 routes.post("/clientes", clienteController.create);
 
