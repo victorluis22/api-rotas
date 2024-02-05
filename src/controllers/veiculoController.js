@@ -3,7 +3,8 @@ import db from "../database/index.js";
 class veiculoController {
 	async create(req, res) {
 		const {
-			descricao, 
+			descricao,
+			custoMensal,
 			emissao, 
 			custo,
 			capacidadeMax,
@@ -13,10 +14,11 @@ class veiculoController {
 
 		db.query(
 			`INSERT INTO veiculo 
-			(Descricao, EmissaoPorKm, CustoPorKm, CapacMax, CodTipoVeic, CodEmpresa) 
-			VALUES (?, ?, ?, ?, ?, ?)`,
+			(Descricao, CustoMensal, EmissaoPorKm, CustoPorKm, CapacMax, CodTipoVeic, CodEmpresa) 
+			VALUES (?, ?, ?, ?, ?, ?, ?)`,
 			[
 				descricao, 
+				custoMensal,
 				emissao, 
 				custo,
 				capacidadeMax,
@@ -48,7 +50,8 @@ class veiculoController {
 
 	async update(req, res) {
 		const {
-			descricao, 
+			descricao,
+			custoMensal,
 			emissao, 
 			custo,
 			capacidadeMax,
@@ -59,9 +62,10 @@ class veiculoController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE veiculo SET Descricao=?, EmissaoPorKm=?, CustoPorKm=?, CapacMax=?, CodTipoVeic=?, CodEmpresa=? WHERE CodVeic=?`,
+			`UPDATE veiculo SET Descricao=?, CustoMensal=?, EmissaoPorKm=?, CustoPorKm=?, CapacMax=?, CodTipoVeic=?, CodEmpresa=? WHERE CodVeic=?`,
 			[
 				descricao, 
+				custoMensal,
 				emissao, 
 				custo,
 				capacidadeMax,
