@@ -1,5 +1,6 @@
 import db from "../database/index.js";
-import { getClientsAvailability, mergeAvailabilitySameClient } from "../services/json.js";
+
+import { createJSON } from "../services/json.js";
 
 class jsonController {
 	async createClientJSON(req, res) {
@@ -27,23 +28,85 @@ class jsonController {
         INNER JOIN horariocoletacliente HCC ON HCC.NumContrato = CT.NumContrato
         INNER JOIN horario H ON H.CodHorario = HCC.CodHorario
         INNER JOIN janelatempo JT ON JT.CodTurno = H.CodTurno
-        ORDER BY C.Nome  
+        ORDER BY C.CodCliente  
       `,
 			async (err, result) => {
         if (err) {
           return res.status(500).send(err);
         } else {
           
-          const clientsData = getClientsAvailability(result)
-          const mergedClients = mergeAvailabilitySameClient(clientsData);
+          const json = createJSON(result, "cliente")
 
-          return res.status(200).send(mergedClients);
+          return res.status(200).send(json);
         }
       }
     );
   }
+
+  async createVeicJSON(req, res) {
+    db.query(`
+      SELECT
+      V.CodVeic as id,
+      V.Descricao as description,
+      V.CapacMax as capacity,
+      V.CustoMensal as monthly_cost,
+      V.CustoPorKm as km_driven_cost,
+      V.EmissaoPorKm as km_driven_emission,
+      H.DiaSemana as day,
+      JT.HoraIni as initialHour,
+      JT.HoraFim as endHour
+      
+      FROM veiculo V
+      INNER JOIN tipoveiculo TV ON TV.CodTipoVeic = V.CodTipoVeic
+      INNER JOIN horariodisponveiculo HDV ON HDV.CodVeic = V.CodVeic
+      INNER JOIN horario H ON H.CodHorario = HDV.CodHorario
+      INNER JOIN janelatempo JT ON JT.CodTurno = H.CodTurno
+      ORDER BY V.CodVeic
+    `,
+    async (err, result) => {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        
+        const json = createJSON(result, "veiculo")
+
+        return res.status(200).send(json);
+      }
+    }
+    );
+  }
+
+  async createPointJSON(req, res){
+    db.query(`
+      SELECT
+      PC.CodPonto as id,
+      PC.Descricao as name,
+      PC.Bairro as district,
+      PC.Logradouro as address,
+      PC.Numero as number,
+      PC.Complemento as complement,
+      H.DiaSemana as day,
+      JT.HoraIni as initialHour,
+      JT.HoraFim as endHour
+
+      FROM pontocompostagem PC
+      INNER JOIN horadescartepontocomp HDP ON HDP.CodPonto = PC.CodPonto
+      INNER JOIN horario H ON H.CodHorario = HDP.CodHorario
+      INNER JOIN janelatempo JT ON JT.CodTurno = H.CodTurno
+      ORDER BY PC.CodPonto
+    `,
+    async (err, result) => {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        
+        const json = createJSON(result, "pontoCompostagem")
+
+          return res.status(200).send(json);
+      }
+    });
+  }
 }
 export default new jsonController()
-
 
 

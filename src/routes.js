@@ -128,5 +128,7 @@ routes.delete("/responsavelVeiculo/:id", responsavelVeicController.delete);
 
 // JSON
 routes.get("/json/cliente", jsonController.createClientJSON);
+routes.get("/json/veiculo", jsonController.createVeicJSON);
+routes.get("/json/ponto", jsonController.createPointJSON);
 
 export default routes;
