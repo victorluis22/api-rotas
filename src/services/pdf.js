@@ -1,11 +1,11 @@
-import fs from "fs"
+import BlobStream from "blob-stream";
 import PDFDocument from "pdfkit";
 import qr from "qr-image";
 
-export const generatePDF = (name, address, qrCodeContent) => {
+export const generatePDF = (name, address, qrCodeContent, callback) => {
 	// Crie um novo documento PDF
 	const doc = new PDFDocument();
-	doc.pipe(fs.createWriteStream('./src/assets/pdf/client.pdf'));
+	const stream = doc.pipe(BlobStream());
 
 	// Defina o tamanho da página
 	const docWidth = 595
@@ -44,4 +44,12 @@ export const generatePDF = (name, address, qrCodeContent) => {
 	doc.text(`Endereço: ${address}`, { align: 'left' });
 	
 	doc.end();
+
+	stream.on('finish', async function () {
+		const blob = stream.toBlob('application/pdf');
+		const arrayBuffer = await blob.arrayBuffer()
+		const buffer = Buffer.from(arrayBuffer)
+		
+		callback(buffer)
+	})
 }

@@ -1,5 +1,4 @@
 import db from "../database/index.js";
-import fs from "fs"
 import { generatePDF } from "../services/pdf.js";
 
 class clienteController {
@@ -27,13 +26,10 @@ class clienteController {
 				} else if (result.length > 0) {
 					return res.status(402).send({ message: "Cliente com CPF ou CNPJ já cadastrado!" });
 				} else {
-					generatePDF(nome, `${logradouro} ${numero} ${complemento}, ${bairro}, ${cidade}, ${uf}`, "randon msg")
-					const pdfData = fs.readFileSync('./src/assets/pdf/client.pdf');
-
 					db.query(
 						`INSERT INTO cliente 
-                        (Nome, Logradouro, Numero, Complemento, CEP, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF, QRCode) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                        (Nome, Logradouro, Numero, Complemento, CEP, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 						[
 							nome,
 							logradouro,
@@ -45,13 +41,13 @@ class clienteController {
 							uf,
 							tempoColeta,
 							cpfcnpj,
-							pjpf,
-							pdfData
+							pjpf
 						],
 						(err) => {
 							if (err) {
 								return res.status(500).send(err);
 							} else {
+
 								return res
 									.status(200)
 									.send({ message: "Novo cliente cadastrado com sucesso!" });
@@ -90,11 +86,8 @@ class clienteController {
 
 		const { id } = req.params;
 
-		generatePDF(nome, `${logradouro} ${numero} ${complemento}, ${bairro}, ${cidade}, ${uf}`, "randon msg")
-		const pdfData = fs.readFileSync('./src/assets/pdf/client.pdf', {encoding: 'base64'});
-
 		db.query(
-			`UPDATE cliente SET Nome=?, Logradouro=?, Numero=?, Complemento=?, CEP=?, Bairro=?, Cidade=?, UF=?, TempoColeta=?, CPF_CNPJ=?, PJ_PF=?, QRCode=? WHERE CodCliente=?`,
+			`UPDATE cliente SET Nome=?, Logradouro=?, Numero=?, Complemento=?, CEP=?, Bairro=?, Cidade=?, UF=?, TempoColeta=?, CPF_CNPJ=?, PJ_PF=? WHERE CodCliente=?`,
 			[
 				nome,
 				logradouro,
@@ -107,7 +100,6 @@ class clienteController {
 				tempoColeta,
 				cpfcnpj,
 				pjpf,
-				pdfData,
 				id
 			],
 			(err, result) => {
@@ -148,39 +140,29 @@ class clienteController {
 		});
 	}
 
-	async readQRCodes(req, res){
-		db.query("SELECT QRCode FROM cliente", (err, result) => {
-			if (err) {
-				return res.status(500).send(err);
-			}
-
-			return res.send(result);
-		});
-	}
-
-	async getQRCode(req, res){
+	async generateQRCode(req, res) {
 		const { id } = req.params;
 
-		db.query("SELECT QRCode FROM cliente WHERE CodCliente=?;", [id], async (err, result) => {
-			if (err) {
-				return res.status(500).send(err);
+		db.query(
+			"SELECT * FROM cliente WHERE CodCliente = ?",
+			[id],
+			async (err, result) => {
+				if (err) {
+					return res.status(500).send(err);
+				} else if (result.length == 0) {
+					return res.status(404).send({ message: "Cliente não encontrado!" });
+				} else {
+					const data = result[0]
+					const name = data.Nome
+					const address = `${data.Logradouro} ${data.Numero} ${data.Complemento}, ${data.Bairro}, ${data.Cidade}, ${data.UF}`
+					const id = data.CodCliente
+					
+					generatePDF(name, address, id, (pdfData) => {
+						return res.status(200).send({ pdfData })
+					});
+				}
 			}
-
-			if (result.length === 0) {
-				return res
-					.status(404)
-					.send({ message: "Nenhum cliente encontrado com esse id." });
-			} else {
-				const pdfData = result[0].QRCode;
-				console.log(pdfData)
-				
-				fs.writeFileSync('./src/assets/pdf/retrievedClient.pdf', pdfData);
-				
-				return res
-					.status(200)
-					.send({ message: "QRCode recuperado com sucesso!" });
-			}
-		});
+		);
 	}
 }
 

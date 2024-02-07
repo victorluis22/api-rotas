@@ -29,7 +29,7 @@ const start = async (req, res) => {
 //Rotas livres
 routes.get("/", start)
 routes.post("/login", sessionsController.create);
-routes.post("/clientes", clienteController.create);
+
 
 // Middleware de autenticação
 // routes.use(auth)
@@ -37,11 +37,11 @@ routes.post("/clientes", clienteController.create);
 // Rotas Protegidas
 
 // Cliente Routes
+routes.post("/clientes", clienteController.create);
 routes.get("/clientes", clienteController.read);
 routes.put('/clientes/:id', clienteController.update);
 routes.delete("/clientes/:id", clienteController.delete);
-routes.get("/clientes/qrcodes", clienteController.readQRCodes);
-routes.get("/clientes/qrcode/:id", clienteController.getQRCode);
+routes.get("/clientes/qrcode/:id", clienteController.generateQRCode);
 
 // Empresa Routes
 routes.post("/empresas", empresaController.create)
