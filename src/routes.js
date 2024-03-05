@@ -18,6 +18,7 @@ import horarioPontoController from "./controllers/horarioPontoController.js";
 import horarioVeiculoController from "./controllers/horarioVeiculoController.js";
 import responsavelVeicController from "./controllers/responsavelVeicController.js";
 import jsonController from "./controllers/jsonController.js";
+import coletaController from "./controllers/coletaController.js";
 
 const routes = Router();
 
@@ -126,6 +127,12 @@ routes.get("/responsavelVeiculo", responsavelVeicController.read);
 routes.get("/responsavelVeiculo/:id", responsavelVeicController.readRespVeiculo);
 routes.put("/responsavelVeiculo/:id", responsavelVeicController.update);
 routes.delete("/responsavelVeiculo/:id", responsavelVeicController.delete);
+
+// Coleta
+routes.post("/coleta", coletaController.create)
+routes.get("/coleta", coletaController.read);
+routes.put("/coleta/:id", coletaController.update);
+routes.delete("/coleta/:id", coletaController.delete);
 
 // JSON
 routes.get("/json/cliente", jsonController.createClientJSON);
