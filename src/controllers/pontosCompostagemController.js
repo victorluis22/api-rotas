@@ -16,7 +16,7 @@ class pontosCompostagemController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO pontoCompostagem
+			`INSERT INTO pontocompostagem
             (
                 descricao,
                 logradouro,
@@ -54,7 +54,7 @@ class pontosCompostagemController {
 	}
 
 	async read(req, res) {
-		db.query("SELECT * FROM pontoCompostagem", (err, result) => {
+		db.query("SELECT * FROM pontocompostagem", (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
@@ -80,7 +80,7 @@ class pontosCompostagemController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE pontoCompostagem SET descricao=?, logradouro=?, numero=?, complemento=?, utm=?, bairro=?, cidade=?, uf=?, capacMaxDia=?, codEmpresa=?  WHERE codPonto=?`,
+			`UPDATE pontocompostagem SET descricao=?, logradouro=?, numero=?, complemento=?, utm=?, bairro=?, cidade=?, uf=?, capacMaxDia=?, codEmpresa=?  WHERE codPonto=?`,
 			[  
                 descricao,
                 logradouro,
@@ -115,7 +115,7 @@ class pontosCompostagemController {
 	async delete(req, res) {
 		const { id } = req.params;
 
-		db.query("DELETE FROM pontoCompostagem WHERE CodPonto=?;", [id], async (err, result) => {
+		db.query("DELETE FROM pontocompostagem WHERE CodPonto=?;", [id], async (err, result) => {
 			if (err) {
 				return res.status(500).send(err);
 			}
