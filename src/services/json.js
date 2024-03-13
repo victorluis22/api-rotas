@@ -105,7 +105,7 @@ function findAvailability (data, day, initialHour, endHour) {
   return data
 }
 
-export function mergeAvailability(data, type) {
+function mergeAvailability(data, type) {
   const mergedData = {};
   var key = ""
 
@@ -143,7 +143,8 @@ export function mergeAvailability(data, type) {
 }
 
 export function createJSON (result, type) {
-    const finalData = []
+    const parcialData = []
+    const finalData = {}
     var data, dataWithAvailability
 
     result.forEach((row) => {
@@ -153,24 +154,32 @@ export function createJSON (result, type) {
         case "cliente":
           data = createClientData(row)
           dataWithAvailability = findAvailability(data, day, initialHour, endHour)
-          finalData.push(dataWithAvailability)
+          parcialData.push(dataWithAvailability)
           break;
         case "veiculo":
           data = createVehicleData(row)
           dataWithAvailability = findAvailability(data, day, initialHour, endHour)
-          finalData.push(dataWithAvailability)
+          parcialData.push(dataWithAvailability)
           break;
         case "pontoCompostagem":
           data = createPointCompData(row)
           dataWithAvailability = findAvailability(data, day, initialHour, endHour)
-          finalData.push(dataWithAvailability)
+          parcialData.push(dataWithAvailability)
           break;
         default:
           break;
       }
     });
 
-    const mergedFinalData = mergeAvailability(finalData, type)
+    const mergedParcialData = mergeAvailability(parcialData, type)
 
-    return mergedFinalData
+    mergedParcialData.forEach((eachData) => {
+      const { id } = eachData
+
+      delete eachData.id
+
+      finalData[id] = eachData
+    })
+
+    return finalData
 }
