@@ -33,7 +33,7 @@ routes.post("/login", sessionsController.create);
 
 
 // Middleware de autenticação
-// routes.use(auth)
+routes.use(auth)
 
 // Rotas Protegidas
 

@@ -1,11 +1,11 @@
 import db from "../database/index.js";
 
-import { createJSON } from "../services/json.js";
+import { createJSON, saveJSONBucket } from "../services/json.js";
 
 class jsonController {
 	async createClientJSON(req, res) {
 
-    const isDownload = req.query.download
+    const saveBucket = req.query.save_bucket
 
 		db.query(
 			`   
@@ -40,12 +40,11 @@ class jsonController {
           
           const json = createJSON(result, "cliente")
 
-          if (isDownload){
+          if (saveBucket){
             var filename = 'customers_data.json';
-            var mimetype = 'application/json';
-            res.setHeader('Content-Type', mimetype);
-            res.setHeader('Content-disposition','attachment; filename='+filename);
-            return res.status(200).send(JSON.stringify(json))
+            await saveJSONBucket(filename, json)
+
+            return res.status(200).send({sucess: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`})
           }
 
           return res.status(200).send(json);
@@ -55,7 +54,7 @@ class jsonController {
   }
 
   async createVeicJSON(req, res) {
-    const isDownload = req.query.download
+    const saveBucket = req.query.save_bucket
 
     db.query(`
       SELECT
@@ -80,15 +79,13 @@ class jsonController {
       if (err) {
         return res.status(500).send(err);
       } else {
-        
         const json = createJSON(result, "veiculo")
 
-        if (isDownload){
+        if (saveBucket){
           var filename = 'vehicles_data.json';
-          var mimetype = 'application/json';
-          res.setHeader('Content-Type', mimetype);
-          res.setHeader('Content-disposition','attachment; filename='+filename);
-          return res.status(200).send(JSON.stringify(json))
+
+          await saveJSONBucket(filename, json)
+          return res.status(200).send({sucess: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`})
         }
 
         return res.status(200).send(json);
@@ -98,7 +95,7 @@ class jsonController {
   }
 
   async createPointJSON(req, res){
-    const isDownload = req.query.download
+    const saveBucket = req.query.save_bucket
     
     db.query(`
       SELECT
@@ -125,12 +122,11 @@ class jsonController {
         
         const json = createJSON(result, "pontoCompostagem")
 
-        if (isDownload){
+        if (saveBucket){
           var filename = 'depots_data.json';
-          var mimetype = 'application/json';
-          res.setHeader('Content-Type', mimetype);
-          res.setHeader('Content-disposition','attachment; filename='+filename);
-          return res.status(200).send(JSON.stringify(json))
+
+          await saveJSONBucket(filename, json)
+          return res.status(200).send({sucess: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`})
         }
 
         return res.status(200).send(json);

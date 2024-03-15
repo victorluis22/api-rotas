@@ -1,3 +1,5 @@
+import { Storage } from "@google-cloud/storage";
+
 function createClientData (row){
   const { id, name, cathegory, plan, district, address, number, complement, duration, vehicle } = row;
 
@@ -182,4 +184,25 @@ export function createJSON (result, type) {
     })
 
     return finalData
+}
+
+export async function saveJSONBucket (filename, content){
+
+  const storage = new Storage({
+      //Troque para o seu arquivo de credenciais google
+      keyFilename: './application_default_credentials.json'
+  });
+
+  //Troque pelo nome do seu Bucket
+  const bucketName = process.env.GOOGLE_BUCKET_NAME;
+
+  //Cria uma referência para o arquivo na Storage usando o nome original dele
+  const file = storage.bucket(bucketName).file(filename);
+
+  // Salva o objeto JSON no arquivo do bucket
+  try { 
+    await file.save(JSON.stringify(content));
+  } catch (error) {
+    throw error
+  }
 }

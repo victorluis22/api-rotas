@@ -26,10 +26,9 @@ class sessionControler{
                 const { CodEmpresa, Nome, CNPJ } = company
 
                 return res.json({
-                    company: {
+                    user: {
                         CodEmpresa,
-                        Nome,
-                        CNPJ
+                        Nome
                     },
                     token: Jwt.sign({ CodEmpresa, Nome, CNPJ }, authConfig.secret, {
                         expiresIn: authConfig.expiresIn
