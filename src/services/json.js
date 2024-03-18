@@ -190,7 +190,7 @@ export async function saveJSONBucket (filename, content){
 
   const storage = new Storage({
       //Troque para o seu arquivo de credenciais google
-      keyFilename: './application_default_credentials.json'
+      keyFilename: process.env.BUCKET_CREDENTIAL_PATH
   });
 
   //Troque pelo nome do seu Bucket
@@ -202,7 +202,10 @@ export async function saveJSONBucket (filename, content){
   // Salva o objeto JSON no arquivo do bucket
   try { 
     await file.save(JSON.stringify(content));
+
+    return true
   } catch (error) {
-    throw error
+    
+    return false
   }
 }

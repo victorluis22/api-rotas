@@ -5,7 +5,7 @@ import { createJSON, saveJSONBucket } from "../services/json.js";
 class jsonController {
 	async createClientJSON(req, res) {
 
-    const saveBucket = req.query.save_bucket
+    const saveBucket = req.query.save_bucket ? req.query.save_bucket.toLowerCase() : "";
 
 		db.query(
 			`   
@@ -38,13 +38,16 @@ class jsonController {
           return res.status(500).send(err);
         } else {
           
-          const json = createJSON(result, "cliente")
+          const json = createJSON(result, "cliente");
 
-          if (saveBucket){
+          if (saveBucket === "true"){
             var filename = 'customers_data.json';
-            await saveJSONBucket(filename, json)
+            const success = await saveJSONBucket(filename, json);
 
-            return res.status(200).send({sucess: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`})
+            if (success){
+              return res.status(200).send({success: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`});
+            }
+            return res.status(500).send({error: `Erro ao salvar ${filename} em ${process.env.GOOGLE_BUCKET_NAME}`});
           }
 
           return res.status(200).send(json);
@@ -54,7 +57,7 @@ class jsonController {
   }
 
   async createVeicJSON(req, res) {
-    const saveBucket = req.query.save_bucket
+    const saveBucket = req.query.save_bucket ? req.query.save_bucket.toLowerCase() : "";
 
     db.query(`
       SELECT
@@ -79,13 +82,16 @@ class jsonController {
       if (err) {
         return res.status(500).send(err);
       } else {
-        const json = createJSON(result, "veiculo")
+        const json = createJSON(result, "veiculo");
 
-        if (saveBucket){
+        if (saveBucket === "true"){
           var filename = 'vehicles_data.json';
+          const success = await saveJSONBucket(filename, json);
 
-          await saveJSONBucket(filename, json)
-          return res.status(200).send({sucess: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`})
+          if (success){
+            return res.status(200).send({success: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`});
+          }
+          return res.status(500).send({error: `Erro ao salvar ${filename} em ${process.env.GOOGLE_BUCKET_NAME}`});
         }
 
         return res.status(200).send(json);
@@ -95,7 +101,7 @@ class jsonController {
   }
 
   async createPointJSON(req, res){
-    const saveBucket = req.query.save_bucket
+    const saveBucket = req.query.save_bucket ? req.query.save_bucket.toLowerCase() : "";
     
     db.query(`
       SELECT
@@ -121,12 +127,15 @@ class jsonController {
       } else {
         
         const json = createJSON(result, "pontoCompostagem")
-
-        if (saveBucket){
+        
+        if (saveBucket === "true"){
           var filename = 'depots_data.json';
+          const success = await saveJSONBucket(filename, json);
 
-          await saveJSONBucket(filename, json)
-          return res.status(200).send({sucess: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`})
+          if (success){
+            return res.status(200).send({success: `${filename} salvo com sucesso no bucket ${process.env.GOOGLE_BUCKET_NAME}`});
+          }
+          return res.status(500).send({error: `Erro ao salvar ${filename} em ${process.env.GOOGLE_BUCKET_NAME}`});
         }
 
         return res.status(200).send(json);
