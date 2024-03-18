@@ -138,5 +138,6 @@ routes.delete("/coleta/:id", coletaController.delete);
 routes.get("/json/cliente", jsonController.createClientJSON);
 routes.get("/json/veiculo", jsonController.createVeicJSON);
 routes.get("/json/ponto", jsonController.createPointJSON);
+routes.get("/json/buscar", jsonController.retrieveJSON)
 
 export default routes;

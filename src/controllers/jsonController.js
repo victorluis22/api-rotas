@@ -1,6 +1,6 @@
 import db from "../database/index.js";
 
-import { createJSON, saveJSONBucket } from "../services/json.js";
+import { createJSON, retrieveJSONBucket, saveJSONBucket } from "../services/json.js";
 
 class jsonController {
 	async createClientJSON(req, res) {
@@ -141,6 +141,18 @@ class jsonController {
         return res.status(200).send(json);
       }
     });
+  }
+
+  async retrieveJSON(req, res){
+    const filename = req.query.filename;
+
+    const response = await retrieveJSONBucket(filename);
+
+    if (!response){
+      return res.status(500).send({error: `Erro ao pegar ${filename} de ${process.env.GOOGLE_BUCKET_NAME}`})
+    }
+
+    return res.status(200).send(response)
   }
 }
 export default new jsonController()
