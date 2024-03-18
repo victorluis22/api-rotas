@@ -7,7 +7,6 @@ class pontosCompostagemController {
             logradouro,
             numero,
             complemento,
-            utm,
             bairro,
             cidade,
             uf,
@@ -22,19 +21,17 @@ class pontosCompostagemController {
                 logradouro,
                 numero,
                 complemento,
-                utm,
                 bairro,
                 cidade,
                 uf,
                 capacMaxDia,
                 codEmpresa)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			[
                 descricao,
                 logradouro,
                 numero,
                 complemento,
-                utm,
                 bairro,
                 cidade,
                 uf,
@@ -69,7 +66,6 @@ class pontosCompostagemController {
             logradouro,
             numero,
             complemento,
-            utm,
             bairro,
             cidade,
             uf,
@@ -80,13 +76,12 @@ class pontosCompostagemController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE pontocompostagem SET descricao=?, logradouro=?, numero=?, complemento=?, utm=?, bairro=?, cidade=?, uf=?, capacMaxDia=?, codEmpresa=?  WHERE codPonto=?`,
+			`UPDATE pontocompostagem SET descricao=?, logradouro=?, numero=?, complemento=?, bairro=?, cidade=?, uf=?, capacMaxDia=?, codEmpresa=?  WHERE codPonto=?`,
 			[  
                 descricao,
                 logradouro,
                 numero,
                 complemento,
-                utm,
                 bairro,
                 cidade,
                 uf,

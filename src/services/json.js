@@ -79,19 +79,19 @@ function createPointCompData (row){
 function findAvailability (data, day, initialHour, endHour) {
 
   switch(day){
-    case "Segunda":
+    case "Segunda-feira":
       data.availability.SEGUNDA.push(`${initialHour} - ${endHour}`)
       break;
-    case "Terça":
+    case "Terça-feira":
       data.availability.TERCA.push(`${initialHour} - ${endHour}`)
       break;
-    case "Quarta":
+    case "Quarta-feira":
       data.availability.QUARTA.push(`${initialHour} - ${endHour}`)
       break;
-    case "Quinta":
+    case "Quinta-feira":
       data.availability.QUINTA.push(`${initialHour} - ${endHour}`)
       break;
-    case "Sexta":
+    case "Sexta-feira":
       data.availability.SEXTA.push(`${initialHour} - ${endHour}`)
       break;
     case "Sábado":
