@@ -1,6 +1,6 @@
 import db from "../database/index.js";
 
-import { createJSON, retrieveJSONBucket, saveJSONBucket } from "../services/json.js";
+import { createJSON, getTodayDate, retrieveJSONBucket, saveJSONBucket } from "../services/json.js";
 
 class jsonController {
 	async createClientJSON(req, res) {
@@ -41,7 +41,8 @@ class jsonController {
           const json = createJSON(result, "cliente");
 
           if (saveBucket === "true"){
-            var filename = 'customers_data.json';
+            const todayDate = getTodayDate();
+            const filename = `input/customers_data_${todayDate}.json`;
             const success = await saveJSONBucket(filename, json);
 
             if (success){
@@ -83,9 +84,11 @@ class jsonController {
         return res.status(500).send(err);
       } else {
         const json = createJSON(result, "veiculo");
+        
 
         if (saveBucket === "true"){
-          var filename = 'vehicles_data.json';
+          const todayDate = getTodayDate();
+          const filename = `input/vehicles_data_${todayDate}.json`;
           const success = await saveJSONBucket(filename, json);
 
           if (success){
@@ -129,7 +132,8 @@ class jsonController {
         const json = createJSON(result, "pontoCompostagem")
         
         if (saveBucket === "true"){
-          var filename = 'depots_data.json';
+          const todayDate = getTodayDate();
+          const filename = `input/depots_data_${todayDate}.json`;
           const success = await saveJSONBucket(filename, json);
 
           if (success){
@@ -144,12 +148,12 @@ class jsonController {
   }
 
   async retrieveJSON(req, res){
-    const filename = req.query.filename;
+    const type = req.query.type;
 
-    const response = await retrieveJSONBucket(filename);
+    const response = await retrieveJSONBucket(type);
 
     if (!response){
-      return res.status(500).send({error: `Erro ao pegar ${filename} de ${process.env.GOOGLE_BUCKET_NAME}`})
+      return res.status(500).send({error: `Erro ao pegar arquivo de rotas do tipo ${type} de ${process.env.GOOGLE_BUCKET_NAME}`})
     }
 
     return res.status(200).send(response)

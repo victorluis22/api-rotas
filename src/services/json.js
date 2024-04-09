@@ -202,25 +202,69 @@ export async function saveJSONBucket (filename, content){
 
     return true
   } catch (error) {
+    console.log(error)
     
     return false
   }
 }
 
-export async function retrieveJSONBucket (filename){
-  const file = bucket.file(filename)
+export async function retrieveJSONBucket (type){
+  const [files] = await bucket.getFiles({prefix: "output/"});
 
-  // Faz o download do arquivo como um buffer
-  return file.download()
+  // Define o padrão de nomenclatura do arquivo com base no tipo especificado
+  let filePattern;
+  if (type === 'all') {
+    filePattern = /output_(\d{2}-\d{2}-\d{4})\.json/;
+  } else if (type === 'weekly') {
+    filePattern = /output_weekly_(\d{2}-\d{2}-\d{4})\.json/;
+  } else {
+    return false
+  }
+
+  // Inicializa variáveis para a data mais recente e o nome do arquivo correspondente
+  let latestDate = new Date(0); // data inicial (muito antiga)
+  let latestFileName = '';
+
+  // Itera sobre os arquivos para encontrar o mais recente do tipo especificado
+  files.forEach(file => {
+      const fileName = file.name;
+      const dateStr = fileName.match(filePattern);
+      
+      if (dateStr) {
+          const [_, dateString] = dateStr;
+          const [dd, mm, aaaa] = dateString.split('--').join('-').split('-');
+          const fileDate = new Date(`${aaaa}-${mm}-${dd}`);
+          
+          // Compara a data do arquivo com a data mais recente encontrada até agora
+          if (fileDate > latestDate) {
+              latestDate = fileDate;
+              latestFileName = fileName;
+          }
+      }
+  });
+
+  return bucket.file(latestFileName).download()
     .then(data => {
       // Define o cabeçalho da resposta
-      const jsonData = JSON.parse(data.toString());
+      const jsonData = {
+        filename: latestFileName,
+        route: JSON.parse(data.toString())
+      };
 
       return jsonData
     })
     .catch(err => {
       return false
     });
+}
+
+export function getTodayDate () {
+  var now = new Date();
+  var day = now.getDate();
+  var month = now.getMonth() + 1; 
+  var year = now.getFullYear(); 
+
+  return day + "-" + month + "-" + year;
 }
 
 

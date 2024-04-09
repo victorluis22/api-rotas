@@ -18,42 +18,30 @@ class clienteController {
 		} = req.body;
 
 		db.query(
-			"SELECT * FROM cliente WHERE CPF_CNPJ = ?",
-			[cpfcnpj],
-			async (err, result) => {
+			`INSERT INTO cliente 
+			(Nome, Logradouro, Numero, Complemento, CEP, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF) 
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			[
+				nome,
+				logradouro,
+				numero,
+				complemento,
+				cep,
+				bairro,
+				cidade,
+				uf,
+				tempoColeta,
+				cpfcnpj,
+				pjpf
+			],
+			(err) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else if (result.length > 0) {
-					return res.status(402).send({ message: "Cliente com CPF ou CNPJ já cadastrado!" });
 				} else {
-					db.query(
-						`INSERT INTO cliente 
-                        (Nome, Logradouro, Numero, Complemento, CEP, Bairro, Cidade, UF, TempoColeta, CPF_CNPJ, PJ_PF) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-						[
-							nome,
-							logradouro,
-							numero,
-							complemento,
-							cep,
-							bairro,
-							cidade,
-							uf,
-							tempoColeta,
-							cpfcnpj,
-							pjpf
-						],
-						(err) => {
-							if (err) {
-								return res.status(500).send(err);
-							} else {
 
-								return res
-									.status(200)
-									.send({ message: "Novo cliente cadastrado com sucesso!" });
-							}
-						}
-					);
+					return res
+						.status(200)
+						.send({ message: "Novo cliente cadastrado com sucesso!" });
 				}
 			}
 		);

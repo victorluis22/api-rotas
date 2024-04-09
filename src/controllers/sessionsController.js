@@ -9,6 +9,7 @@ class sessionControler{
 
         db.query("SELECT * FROM empresacoletadora WHERE login = ?", [login], async (err, result) => {
             if(err){
+                console.log(err)
                 return res.status(500).send(err);
             }
 
