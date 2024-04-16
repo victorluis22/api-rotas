@@ -223,7 +223,7 @@ export async function retrieveJSONBucket (type){
 
   // Inicializa variáveis para a data mais recente e o nome do arquivo correspondente
   let latestDate = new Date(0); // data inicial (muito antiga)
-  let latestFileName = '';
+  let latestFileName = 'default.json';
 
   // Itera sobre os arquivos para encontrar o mais recente do tipo especificado
   files.forEach(file => {

@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 .env
 bucket-credential.json
+api-rotas.rar
