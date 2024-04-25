@@ -2,6 +2,8 @@ import BlobStream from "blob-stream";
 import PDFDocument from "pdfkit";
 import qr from "qr-image";
 
+import fs from "fs"
+
 export const generatePDF = (name, address, qrCodeContent, callback) => {
 	// Crie um novo documento PDF
 	const doc = new PDFDocument();
@@ -52,4 +54,46 @@ export const generatePDF = (name, address, qrCodeContent, callback) => {
 		
 		callback(buffer)
 	})
+}
+
+export const generateRoutePDF = (json) => {
+	// Nome do arquivo JSON
+	const filename = 'output/output_22-04-2024.json';
+	// Dia para o qual você deseja gerar o PDF
+	const dia = 'Quarta-feira';
+
+	criarPDF(json, dia)
+}
+
+
+// Função para criar o PDF com as rotas do dia especificado
+function criarPDF(dados, dia) {
+    const doc = new PDFDocument();
+    const outputFilename = `rotas_${dia}.pdf`;
+
+    doc.pipe(fs.createWriteStream(outputFilename));
+
+    // Adiciona um título ao PDF
+    doc.fontSize(20).text(`Rotas para ${dia}`, { align: 'center' });
+    doc.moveDown();
+
+    // Adiciona as rotas ao PDF
+    const rotasDoDia = dados.route;
+    if (rotasDoDia) {
+        const rotas = rotasDoDia[dia];
+        if (rotas) {
+            for (const [veiculo, rota] of Object.entries(rotas)) {
+                doc.fontSize(16).text(`${veiculo}:`, { continued: true });
+                doc.fontSize(12).text(JSON.stringify(rota));
+                doc.moveDown();
+            }
+        } else {
+            doc.text('Nenhuma rota encontrada para este dia.');
+        }
+    } else {
+        doc.text('Nenhuma informação de rota disponível.');
+    }
+
+    doc.end();
+    console.log(`PDF gerado com sucesso: ${outputFilename}`);
 }

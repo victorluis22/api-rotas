@@ -19,12 +19,13 @@ import horarioVeiculoController from "./controllers/horarioVeiculoController.js"
 import responsavelVeicController from "./controllers/responsavelVeicController.js";
 import jsonController from "./controllers/jsonController.js";
 import coletaController from "./controllers/coletaController.js";
+import pdfController from "./controllers/pdfController.js";
 
 const routes = Router();
 
 const start = async (req, res) => {
     var now = new Date();
-    return res.status(200).json({msg: `API ROTAS v1.0.0 - ${now}`})
+    return res.status(200).json({msg: `API ROTAS v1.1.0 - ${now}`})
 }
 
 //Rotas livres
@@ -43,6 +44,7 @@ routes.get("/clientes", clienteController.read);
 routes.put('/clientes/:id', clienteController.update);
 routes.delete("/clientes/:id", clienteController.delete);
 routes.get("/clientes/qrcode/:id", clienteController.generateQRCode);
+routes.get("/clientes/xlsx/:empresaId", clienteController.getXLSXData);
 
 // Empresa Routes
 routes.post("/empresas", empresaController.create)
@@ -138,6 +140,9 @@ routes.delete("/coleta/:id", coletaController.delete);
 routes.get("/json/cliente", jsonController.createClientJSON);
 routes.get("/json/veiculo", jsonController.createVeicJSON);
 routes.get("/json/ponto", jsonController.createPointJSON);
-routes.get("/json/buscar", jsonController.retrieveJSON)
+routes.get("/json/buscar", jsonController.retrieveJSON);
+
+// PDF
+routes.get("/pdf", pdfController.generatePDF);
 
 export default routes;
