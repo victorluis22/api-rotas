@@ -260,11 +260,10 @@ export async function retrieveJSONBucket (type){
 
 export function getTodayDate () {
   var now = new Date();
-  var day = now.getDate();
-  var month = now.getMonth() + 1; 
-  var year = now.getFullYear(); 
 
-  return day + "-" + month + "-" + year;
+  return now.toLocaleDateString("pt-br").replaceAll("/", "-");
 }
+
+
 
 
