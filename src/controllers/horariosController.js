@@ -8,25 +8,45 @@ class horariosController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO horario 
-			(
-                DiaSemana,
-                CodTurno) 
-			VALUES (?, ?)`,
-			[
-                diaSemana,
-                codTurno
-			],
-			(err) => {
+			`
+				SELECT * FROM horario 
+				WHERE DiaSemana = ? AND CodTurno=?
+			`,
+			[diaSemana, codTurno],
+			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else {
-					return res
-						.status(200)
-						.send({ message: "Novo horario cadastrado com sucesso!" });
 				}
+
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
+				}
+
+				db.query(
+					`
+						INSERT INTO horario 
+						(
+							DiaSemana,
+							CodTurno
+						) 
+						VALUES (?, ?)
+					`,
+					[
+						diaSemana,
+						codTurno
+					],
+					(err) => {
+						if (err) {
+							return res.status(500).send(err);
+						} else {
+							return res
+								.status(200)
+								.send({ message: "Novo horario cadastrado com sucesso!" });
+						}
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async read(req, res) {
@@ -77,28 +97,45 @@ class horariosController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE horario SET DiaSemana=?, CodTurno=? WHERE CodHorario=?`,
-			[
-                diaSemana,
-                codTurno,
-                id
-			],
+			`
+				SELECT * FROM horario 
+				WHERE DiaSemana = ? AND CodTurno=?
+			`,
+			[diaSemana, codTurno],
 			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
 				}
 
-				if (result.affectedRows === 0) {
-					return res.status(404).send({
-						message: "Nenhum horario encontrado com esse id.",
-					});
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
 				}
 
-				return res
-					.status(200)
-					.send({ message: "Horario atualizado com sucesso!" });
+				db.query(
+					`UPDATE horario SET DiaSemana=?, CodTurno=? WHERE CodHorario=?`,
+					[
+						diaSemana,
+						codTurno,
+						id
+					],
+					(err, result) => {
+						if (err) {
+							return res.status(500).send(err);
+						}
+		
+						if (result.affectedRows === 0) {
+							return res.status(404).send({
+								message: "Nenhum horario encontrado com esse id.",
+							});
+						}
+		
+						return res
+							.status(200)
+							.send({ message: "Horario atualizado com sucesso!" });
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async delete(req, res) {
