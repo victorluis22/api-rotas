@@ -91,6 +91,66 @@ class coletaController {
 			}
 		});
 	}
+
+	async getConsolidatedData(req, res) {
+		var {
+            dataIni,
+            dataFim
+		} = req.body;
+
+		console.log(dataIni)
+
+		// dataIni = `${dataIni} 00:00:00`
+		// dataFim = `${dataFim} 23:59:59`
+
+		db.query(`
+			SELECT C.Nome, C.Logradouro, C.Bairro, C.Cidade, C.Complemento, sum(CR.PesoColetado) AS "Peso Total"
+			FROM cliente C
+			INNER JOIN coletarealizada CR ON C.CodCliente = CR.CodCliente
+			WHERE DataHora >= ? AND DataHora <= ?
+			GROUP BY C.Nome, C.Logradouro, C.Bairro, C.Cidade, C.Complemento
+			ORDER BY C.Nome
+			`
+		,
+		[dataIni, dataFim],
+			(err, result) => {
+				if (err) {
+					console.log(err)
+					return res.status(500).send(err);
+				}
+
+				return res.status(200).send(result);
+			}
+		)
+	}
+
+	async getDetailedData(req, res) {
+		let {
+            dataIni,
+            dataFim
+		} = req.body;
+
+		dataIni = `${dataIni} 00:00:00`
+		dataFim = `${dataFim} 23:59:59`
+
+		db.query(`
+			SELECT C.Nome, C.Logradouro, C.Bairro, C.Cidade, C.Complemento, CR.DataHora, CR.PesoColetado
+			FROM cliente C
+			INNER JOIN coletarealizada CR ON C.CodCliente = CR.CodCliente
+			WHERE DataHora >= ? AND DataHora <= ?
+			ORDER BY C.Nome, CR.DataHora
+			`
+		,
+		[dataIni, dataFim],
+			(err, result) => {
+				if (err) {
+					return res.status(500).send(err);
+				}
+
+				return res.status(200).send(result);
+			}
+		)
+	}
 }
 
 export default new coletaController();

@@ -8,23 +8,42 @@ class horarioClienteController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO horariocoletacliente
-			(CodHorario, NumContrato) 
-			VALUES (?, ?)`,
-			[
-				codHorario,
-				codContrato
-			],
-			(err) => {
+			`
+				SELECT * FROM horariocoletacliente
+				WHERE CodHorario = ? AND NumContrato=?
+			`,
+			[codHorario, codContrato],
+			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else {
-					return res
-						.status(200)
-						.send({ message: "Novo horário de cliente cadastrado com sucesso!" });
 				}
+
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
+				}
+				
+				db.query(
+					`INSERT INTO horariocoletacliente
+					(CodHorario, NumContrato) 
+					VALUES (?, ?)`,
+					[
+						codHorario,
+						codContrato
+					],
+					(err) => {
+						if (err) {
+							return res.status(500).send(err);
+						} else {
+							return res
+								.status(200)
+								.send({ message: "Novo horário de cliente cadastrado com sucesso!" });
+						}
+					}
+				);
+				
 			}
-		);
+		)
+
 	}
 
 	async read(req, res) {
@@ -62,28 +81,45 @@ class horarioClienteController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE horariocoletacliente SET CodHorario=?, NumContrato=? WHERE CodHC=?`,
-			[
-                codHorario,
-				codContrato,
-				id
-			],
+			`
+				SELECT * FROM horariocoletacliente
+				WHERE CodHorario = ? AND NumContrato=?
+			`,
+			[codHorario, codContrato],
 			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
 				}
 
-				if (result.affectedRows === 0) {
-					return res.status(404).send({
-						message: "Nenhum horário de cliente encontrado com esse id.",
-					});
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
 				}
-
-				return res
-					.status(200)
-					.send({ message: "Horário de cliente atualizado com sucesso!" });
+				
+				db.query(
+					`UPDATE horariocoletacliente SET CodHorario=?, NumContrato=? WHERE CodHC=?`,
+					[
+						codHorario,
+						codContrato,
+						id
+					],
+					(err, result) => {
+						if (err) {
+							return res.status(500).send(err);
+						}
+		
+						if (result.affectedRows === 0) {
+							return res.status(404).send({
+								message: "Nenhum horário de cliente encontrado com esse id.",
+							});
+						}
+		
+						return res
+							.status(200)
+							.send({ message: "Horário de cliente atualizado com sucesso!" });
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async delete(req, res) {

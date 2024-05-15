@@ -8,23 +8,41 @@ class horarioPontoController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO horadescartepontocomp
-			(CodHorario, CodPonto) 
-			VALUES (?, ?)`,
-			[
-				codHorario,
-				codPonto
-			],
-			(err) => {
+			`
+				SELECT * FROM horadescartepontocomp
+				WHERE CodHorario = ? AND CodPonto=?
+			`,
+			[codHorario, codPonto],
+			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else {
-					return res
-						.status(200)
-						.send({ message: "Novo horário de ponto de compostagem cadastrado com sucesso!" });
 				}
+
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
+				}
+
+				db.query(
+					`INSERT INTO horadescartepontocomp
+					(CodHorario, CodPonto) 
+					VALUES (?, ?)`,
+					[
+						codHorario,
+						codPonto
+					],
+					(err) => {
+						if (err) {
+							return res.status(500).send(err);
+						} else {
+							return res
+								.status(200)
+								.send({ message: "Novo horário de ponto de compostagem cadastrado com sucesso!" });
+						}
+					}
+				);
+
 			}
-		);
+		)
 	}
 
 	async read(req, res) {
@@ -62,29 +80,46 @@ class horarioPontoController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE horadescartepontocomp SET CodHorario=?, CodPonto=? WHERE CodHD=?`,
-			[
-                codHorario,
-				codPonto,
-				id
-			],
+			`
+				SELECT * FROM horadescartepontocomp
+				WHERE CodHorario = ? AND CodPonto=?
+			`,
+			[codHorario, codPonto],
 			(err, result) => {
 				if (err) {
-					console.log(err)
 					return res.status(500).send(err);
 				}
 
-				if (result.affectedRows === 0) {
-					return res.status(404).send({
-						message: "Nenhum horário de ponto de compostagem encontrado com esse id.",
-					});
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
 				}
 
-				return res
-					.status(200)
-					.send({ message: "Horário de ponto de compostagem atualizado com sucesso!" });
+				db.query(
+					`UPDATE horadescartepontocomp SET CodHorario=?, CodPonto=? WHERE CodHD=?`,
+					[
+						codHorario,
+						codPonto,
+						id
+					],
+					(err, result) => {
+						if (err) {
+							console.log(err)
+							return res.status(500).send(err);
+						}
+		
+						if (result.affectedRows === 0) {
+							return res.status(404).send({
+								message: "Nenhum horário de ponto de compostagem encontrado com esse id.",
+							});
+						}
+		
+						return res
+							.status(200)
+							.send({ message: "Horário de ponto de compostagem atualizado com sucesso!" });
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async delete(req, res) {

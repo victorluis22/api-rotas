@@ -8,23 +8,40 @@ class horarioVeiculoController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO horariodisponveiculo
-			(CodHorario, CodVeic) 
-			VALUES (?, ?)`,
-			[
-				codHorario,
-				codVeic
-			],
-			(err) => {
+			`
+				SELECT * FROM horariodisponveiculo
+				WHERE CodHorario = ? AND CodVeic=?
+			`,
+			[codHorario, codVeic],
+			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else {
-					return res
-						.status(200)
-						.send({ message: "Novo horário de veículo cadastrado com sucesso!" });
 				}
+
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
+				}
+				db.query(
+					`INSERT INTO horariodisponveiculo
+					(CodHorario, CodVeic) 
+					VALUES (?, ?)`,
+					[
+						codHorario,
+						codVeic
+					],
+					(err) => {
+						if (err) {
+							return res.status(500).send(err);
+						} else {
+							return res
+								.status(200)
+								.send({ message: "Novo horário de veículo cadastrado com sucesso!" });
+						}
+					}
+				);
+				
 			}
-		);
+		)		
 	}
 
 	async read(req, res) {
@@ -62,29 +79,47 @@ class horarioVeiculoController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE horariodisponveiculo SET CodHorario=?, CodVeic=? WHERE CodDV=?`,
-			[
-                codHorario,
-				codVeic,
-				id
-			],
+			`
+				SELECT * FROM horariodisponveiculo
+				WHERE CodHorario = ? AND CodVeic=?
+			`,
+			[codHorario, codVeic],
 			(err, result) => {
 				if (err) {
-					console.log(err)
 					return res.status(500).send(err);
 				}
 
-				if (result.affectedRows === 0) {
-					return res.status(404).send({
-						message: "Nenhum horário de veículo encontrado com esse id.",
-					});
+				if (result.length > 0){
+					return res.status(402).send({message: "Horário já cadastrado"})
 				}
-
-				return res
-					.status(200)
-					.send({ message: "Horário de veículo atualizado com sucesso!" });
+				
+				
+				db.query(
+					`UPDATE horariodisponveiculo SET CodHorario=?, CodVeic=? WHERE CodDV=?`,
+					[
+						codHorario,
+						codVeic,
+						id
+					],
+					(err, result) => {
+						if (err) {
+							console.log(err)
+							return res.status(500).send(err);
+						}
+		
+						if (result.affectedRows === 0) {
+							return res.status(404).send({
+								message: "Nenhum horário de veículo encontrado com esse id.",
+							});
+						}
+		
+						return res
+							.status(200)
+							.send({ message: "Horário de veículo atualizado com sucesso!" });
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async delete(req, res) {
