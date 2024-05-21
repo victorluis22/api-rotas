@@ -158,13 +158,14 @@ class clienteController {
 
 		db.query(
 			`
-				SELECT C.*, TC.Periodicidade, TC.ValorMensal, CT.DataIni, CT.DataFim, CT.VolumeBalde, EC.Nome AS Empresa, H.DiaSemana, JT.HoraIni, JT.HoraFim  FROM cliente C
+				SELECT C.*, TC.Periodicidade, TC.ValorMensal, CT.DataIni, CT.DataFim, CT.VolumeBalde, EC.Nome AS Empresa, H.DiaSemana, JT.HoraIni, JT.HoraFim, TP.DescTipo AS "Tipo Veiculo"  FROM cliente C
 				INNER JOIN contrato CT ON CT.CodCliente = C.CodCliente
 				INNER JOIN horariocoletacliente HCC ON HCC.NumContrato = CT.NumContrato
 				INNER JOIN tipocontrato TC ON TC.CodTipoContrato = CT.CodTipoContrato
 				INNER JOIN empresacoletadora EC ON EC.CodEmpresa = CT.CodEmpresa
 				INNER JOIN horario H ON H.CodHorario = HCC.CodHorario
 				INNER JOIN janelatempo JT ON JT.CodTurno = H.CodTurno
+				INNER JOIN tipoveiculo TP ON TP.CodTipoVeic = CT.CodTipoVeic
 				WHERE CT.CodEmpresa = ?
 				ORDER BY C.CodCliente
 			`,

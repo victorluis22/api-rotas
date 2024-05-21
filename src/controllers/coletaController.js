@@ -98,10 +98,8 @@ class coletaController {
             dataFim
 		} = req.body;
 
-		console.log(dataIni)
-
-		// dataIni = `${dataIni} 00:00:00`
-		// dataFim = `${dataFim} 23:59:59`
+		dataIni = `${dataIni} 00:00:00`
+		dataFim = `${dataFim} 23:59:59`
 
 		db.query(`
 			SELECT C.Nome, C.Logradouro, C.Bairro, C.Cidade, C.Complemento, sum(CR.PesoColetado) AS "Peso Total"
@@ -125,7 +123,7 @@ class coletaController {
 	}
 
 	async getDetailedData(req, res) {
-		let {
+		var {
             dataIni,
             dataFim
 		} = req.body;

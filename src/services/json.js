@@ -216,7 +216,7 @@ export async function retrieveJSONBucket (type){
   if (type === 'all') {
     filePattern = /output_(\d{2}-\d{2}-\d{4})\.json/;
   } else if (type === 'weekly') {
-    filePattern = /output_weekly_(\d{2}-\d{2}-\d{4})\.json/;
+    filePattern = /output_weekly-only_(\d{2}-\d{2}-\d{4})\.json/;
   } else {
     return false
   }

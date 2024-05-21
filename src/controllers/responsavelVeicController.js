@@ -8,23 +8,40 @@ class responsavelVeicController {
 		} = req.body;
 
 		db.query(
-			`INSERT INTO responsavelveiculo
-			(CodResp, CodVeic) 
-			VALUES (?, ?)`,
-			[
-				codResp,
-				codVeic
-			],
-			(err) => {
+			`
+				SELECT * FROM responsavelveiculo
+				WHERE CodResp = ? AND CodVeic=?
+			`,
+			[codResp, codVeic],
+			(err, result) => {
 				if (err) {
 					return res.status(500).send(err);
-				} else {
-					return res
-						.status(200)
-						.send({ message: "Novo responsável de veículo cadastrado com sucesso!" });
 				}
+
+				if (result.length > 0){
+					return res.status(402).send({message: "Responsável de veículo já cadastrado"})
+				}
+
+				db.query(
+					`INSERT INTO responsavelveiculo
+					(CodResp, CodVeic) 
+					VALUES (?, ?)`,
+					[
+						codResp,
+						codVeic
+					],
+					(err) => {
+						if (err) {
+							return res.status(500).send(err);
+						} else {
+							return res
+								.status(200)
+								.send({ message: "Novo responsável de veículo cadastrado com sucesso!" });
+						}
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async read(req, res) {
@@ -61,29 +78,46 @@ class responsavelVeicController {
 		const { id } = req.params;
 
 		db.query(
-			`UPDATE responsavelveiculo SET CodResp=?, CodVeic=? WHERE CodRV=?`,
-			[
-                codResp,
-				codVeic,
-				id
-			],
+			`
+				SELECT * FROM responsavelveiculo
+				WHERE CodResp = ? AND CodVeic=?
+			`,
+			[codResp, codVeic],
 			(err, result) => {
 				if (err) {
-					console.log(err)
 					return res.status(500).send(err);
 				}
 
-				if (result.affectedRows === 0) {
-					return res.status(404).send({
-						message: "Nenhum responsável de veículo encontrado com esse id.",
-					});
+				if (result.length > 0){
+					return res.status(402).send({message: "Responsável de veículo já cadastrado"})
 				}
 
-				return res
-					.status(200)
-					.send({ message: "Responsável de veículo atualizado com sucesso!" });
+				db.query(
+					`UPDATE responsavelveiculo SET CodResp=?, CodVeic=? WHERE CodRV=?`,
+					[
+						codResp,
+						codVeic,
+						id
+					],
+					(err, result) => {
+						if (err) {
+							console.log(err)
+							return res.status(500).send(err);
+						}
+		
+						if (result.affectedRows === 0) {
+							return res.status(404).send({
+								message: "Nenhum responsável de veículo encontrado com esse id.",
+							});
+						}
+		
+						return res
+							.status(200)
+							.send({ message: "Responsável de veículo atualizado com sucesso!" });
+					}
+				);
 			}
-		);
+		)
 	}
 
 	async delete(req, res) {

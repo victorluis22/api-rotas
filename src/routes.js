@@ -135,8 +135,8 @@ routes.post("/coleta", coletaController.create)
 routes.get("/coleta", coletaController.read);
 routes.put("/coleta/:id", coletaController.update);
 routes.delete("/coleta/:id", coletaController.delete);
-routes.get("/coleta/consolidated", coletaController.getConsolidatedData);
-routes.get("/coleta/detailed", coletaController.getDetailedData);
+routes.post("/coleta/consolidated", coletaController.getConsolidatedData);
+routes.post("/coleta/detailed", coletaController.getDetailedData);
 
 // JSON
 routes.get("/json/cliente", jsonController.createClientJSON);
