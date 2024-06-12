@@ -10,20 +10,19 @@ class jsonController {
 		db.query(
 			`   
         SELECT
-        C.CodCliente as id,
-        C.Nome as name, 
-        C.PJ_PF as cathegory,
-        TC.Periodicidade as plan,
-        C.Bairro as district,
-        C.Logradouro as address,
-        C.Numero as number,
-        C.Complemento as complement,
-        H.DiaSemana as day,
-        JT.HoraIni as initialHour,
-        JT.HoraFim as endHour,
-        C.TempoColeta as duration,
-        TV.DescTipo as vehicle
-        
+          C.CodCliente as id,
+          C.Nome as name, 
+          C.PJ_PF as cathegory,
+          TC.Periodicidade as plan,
+          C.Bairro as district,
+          C.Logradouro as address,
+          C.Numero as number,
+          C.Complemento as complement,
+          H.DiaSemana as day,
+          JT.HoraIni as initialHour,
+          JT.HoraFim as endHour,
+          C.TempoColeta as duration,
+          TV.DescTipo as vehicle
         FROM cliente C
         INNER JOIN contrato CT ON CT.CodCliente = C.CodCliente
         INNER JOIN tipocontrato TC ON TC.CodTipoContrato = CT.CodTipoContrato
@@ -31,7 +30,8 @@ class jsonController {
         INNER JOIN horariocoletacliente HCC ON HCC.NumContrato = CT.NumContrato
         INNER JOIN horario H ON H.CodHorario = HCC.CodHorario
         INNER JOIN janelatempo JT ON JT.CodTurno = H.CodTurno
-        ORDER BY C.CodCliente  
+        WHERE CT.DataFim IS NULL OR CT.DataFim > CURRENT_DATE()
+        ORDER BY C.CodCliente;
       `,
 			async (err, result) => {
         if (err) {

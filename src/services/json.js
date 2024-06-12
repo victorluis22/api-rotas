@@ -14,10 +14,10 @@ function createClientData (row){
       name,
       cathegory,
       plan,
-      district,
-      address,
-      number,
-      complement,
+      district: district.trim(),
+      address: address.trim(),
+      number: number,
+      complement: complement.trim(),
       availability: {
         SEGUNDA: [],
         TERCA: [],
@@ -64,10 +64,10 @@ function createPointCompData (row){
   const data = {
       id,
       name,
-      district,
-      address,
+      district: district.trim(),
+      address: address.trim(),
       number,
-      complement,
+      complement: complement.trim(),
       availability: {
         SEGUNDA: [],
         TERCA: [],
